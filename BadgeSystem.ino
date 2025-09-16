@@ -24,7 +24,10 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     while (true);
   }
-
+  pinMode(PIN_RED,   OUTPUT);
+  pinMode(PIN_GREEN, OUTPUT);
+  pinMode(PIN_BLUE,  OUTPUT);
+  
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(SSD1306_WHITE);
@@ -98,5 +101,6 @@ void loop() {
   rfid.PCD_StopCrypto1();
 
   delay(3000);
-  display.clearDisplay();
+  ClearDisplay();
+  
 }

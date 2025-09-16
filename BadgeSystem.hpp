@@ -13,6 +13,10 @@
 #define MISO 19
 #define MOSI 23
 
+#define PIN_RED    33 // green
+#define PIN_GREEN  25 // red
+#define PIN_BLUE   32 // blue
+
 #define OLED_SDA 21
 #define OLED_SCL 22
 #define SCREEN_HEIGHT 64
@@ -50,3 +54,4 @@ int CheckPermission();
 void  AccessAllowed();
 void  AccessBlocked();
 void  AccessDenied();
+void  ClearDisplay();

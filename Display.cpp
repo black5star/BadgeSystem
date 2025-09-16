@@ -10,6 +10,10 @@ void  AccessAllowed() {
   display.setCursor(23, 40);
   display.println("ALLOWED");
   display.display();
+
+  analogWrite(PIN_RED,   0);
+  analogWrite(PIN_GREEN, 255);
+  analogWrite(PIN_BLUE,  0);
 }
 
 void  AccessBlocked() {
@@ -21,6 +25,10 @@ void  AccessBlocked() {
   display.setCursor(23, 40);
   display.println("BLOCKED");
   display.display();
+  
+  analogWrite(PIN_RED,   0);
+  analogWrite(PIN_GREEN, 0);
+  analogWrite(PIN_BLUE,  255);
 }
 
 void  AccessDenied() {
@@ -32,4 +40,16 @@ void  AccessDenied() {
   display.setCursor(28, 40);
   display.println("DENIED");
   display.display();
+  
+  analogWrite(PIN_RED,   255);
+  analogWrite(PIN_GREEN, 0);
+  analogWrite(PIN_BLUE,  0);
+}
+
+void  ClearDisplay() {
+  display.clearDisplay();
+
+  analogWrite(PIN_RED,   0);
+  analogWrite(PIN_GREEN, 0);
+  analogWrite(PIN_BLUE,  0);
 }
