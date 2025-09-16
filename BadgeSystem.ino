@@ -13,10 +13,25 @@ CardInfo DataBase[] = {
 };
 const int NUM_CARDS = sizeof(DataBase) / sizeof(CardInfo);
 
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
 void setup() {
   Serial.begin(115200);
   delay(500);
+  
+  Wire.begin(OLED_SDA, OLED_SCL);
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    while (true);
+  }
 
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(15, 25);
+  display.println("Connected");
+  display.display();
+  
   WiFi.begin(ssid, password);
   Serial.println("\nConnecting to WiFi...");
   while (WiFi.status() != WL_CONNECTED) {
@@ -61,12 +76,16 @@ void loop() {
   }
   int indx = CheckPermission();
   if (indx == -1){
+    AccessDenied();
     Serial.println("ID NOT FOUND.");
   } else if (DataBase[indx].activate == false) {
+    AccessBlocked();
     Serial.println("ACCESS DENIED.");
   } else {
+    AccessAllowed();
     Serial.println("ACCESS ALLOWED.");
   }
+  
 //  Serial.print("Card UID: ");
 //  for (byte i = 0; i < rfid.uid.size; i++) {
 //    if (rfid.uid.uidByte[i] < 0x10) Serial.print("0");
@@ -78,5 +97,6 @@ void loop() {
   rfid.PICC_HaltA();       
   rfid.PCD_StopCrypto1();
 
-  delay(5000);
+  delay(3000);
+  display.clearDisplay();
 }
