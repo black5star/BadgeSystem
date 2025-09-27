@@ -4,14 +4,11 @@
 MFRC522 rfid(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key; 
 
-const char* ssid = "MAKERS_IOT";
-const char* password = "1337@IOT";
-  
-CardInfo DataBase[] = {
-  {{0xB3, 0x1B, 0x80, 0x1B}, "BlackStar", "Admin", true},
-  {{0x57, 0x39, 0x23, 0x03}, "Paper", "Owner", false},
-};
-const int NUM_CARDS = sizeof(DataBase) / sizeof(CardInfo);
+//const char* ssid = "MAKERS_IOT";
+//const char* password = "1337@IOT";
+
+CardInfo *DataBase;
+int dbSize;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
@@ -24,9 +21,16 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     while (true);
   }
+  if (initDataBase() == false){
+    Serial.println(F("DataBase allocation failed"));
+    while (true);
+  }
   pinMode(PIN_RED,   OUTPUT);
   pinMode(PIN_GREEN, OUTPUT);
   pinMode(PIN_BLUE,  OUTPUT);
+  pinMode(BLACK_BUTTON,  INPUT_PULLUP);
+  pinMode(YELLOW_BUTTON, INPUT_PULLUP);
+  pinMode(BLUE_BUTTON,   INPUT_PULLUP);
   
   display.clearDisplay();
   display.setTextSize(2);
@@ -35,15 +39,15 @@ void setup() {
   display.println("Connected");
   display.display();
   
-  WiFi.begin(ssid, password);
-  Serial.println("\nConnecting to WiFi...");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(200);
-  }
-  Serial.println("\nConnected!");
-  Serial.print("ESP32 IP: ");
-  Serial.println(WiFi.localIP());
+//  WiFi.begin(ssid, password);
+//  Serial.println("\nConnecting to WiFi...");
+//  while (WiFi.status() != WL_CONNECTED) {
+//    Serial.print(".");
+//    delay(200);
+//  }
+//  Serial.println("\nConnected!");
+//  Serial.print("ESP32 IP: ");
+//  Serial.println(WiFi.localIP());
 
   SPI.begin(SCK, MISO, MOSI, SS_PIN);
 
@@ -77,13 +81,21 @@ void loop() {
     Serial.println("Failed to read card.");
     return;
   }
-  int indx = CheckPermission();
+  int indx = findMember();
   if (indx == -1){
+    Serial.print("Card UID: ");
+    for (byte i = 0; i < rfid.uid.size; i++) {
+      if (rfid.uid.uidByte[i] < 0x10) Serial.print("0");
+      Serial.print(rfid.uid.uidByte[i], HEX);
+      Serial.print(" ");
+    }
+    Serial.println();
     AccessDenied();
     Serial.println("ID NOT FOUND.");
-  } else if (DataBase[indx].activate == false) {
-    AccessBlocked();
-    Serial.println("ACCESS DENIED.");
+  } else if (DataBase[indx].masterCard == true) {
+    Serial.println("click a botton.");
+    manageDataBase();
+    Serial.println("WELCOME ADMIN.");
   } else {
     AccessAllowed();
     Serial.println("ACCESS ALLOWED.");
