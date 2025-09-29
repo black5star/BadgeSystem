@@ -61,6 +61,8 @@ int manageDataBase();
 
 // Display
 void  AccessAllowed();
-void  AccessBlocked();
 void  AccessDenied();
+void  WelcomeAdmin();
+void  MemberInserted();
+void  MemberRemoved();
 void  ClearDisplay();

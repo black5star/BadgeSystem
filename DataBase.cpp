@@ -31,7 +31,16 @@ int findMember() {
 bool InsertMember() {  
   rfid.PICC_HaltA();       
   rfid.PCD_StopCrypto1();
-  while (!rfid.PICC_IsNewCardPresent()) {}
+  while (!rfid.PICC_IsNewCardPresent()) {
+    bool black = digitalRead(BLACK_BUTTON);
+    bool yellow = digitalRead(YELLOW_BUTTON);
+    bool blue = digitalRead(BLUE_BUTTON);
+    if(black == HIGH && yellow == LOW && blue == LOW){
+      Serial.println("Black ");
+      return 0;
+    }
+    delay(100);
+  }
   if (!rfid.PICC_ReadCardSerial()) {
     Serial.println("Failed to read card.");
     return false;
@@ -52,6 +61,7 @@ bool InsertMember() {
   DataBase[dbSize].masterCard = false;
 
   dbSize++;
+  MemberInserted();
   Serial.println("Member inserted.");
   return true;
 }
@@ -59,7 +69,16 @@ bool InsertMember() {
 bool  RemoveMember() {
   rfid.PICC_HaltA();       
   rfid.PCD_StopCrypto1();
-  while (!rfid.PICC_IsNewCardPresent()) {}
+  while (!rfid.PICC_IsNewCardPresent()) {
+    bool black = digitalRead(BLACK_BUTTON);
+    bool yellow = digitalRead(YELLOW_BUTTON);
+    bool blue = digitalRead(BLUE_BUTTON);
+    if(black == HIGH && yellow == LOW && blue == LOW){
+      Serial.println("Black ");
+      return 0;
+    }
+    delay(100);
+  }
   if (!rfid.PICC_ReadCardSerial()) {
     Serial.println("Failed to read card.");
     return false;
@@ -80,36 +99,38 @@ bool  RemoveMember() {
   if (temp == nullptr && dbSize - 1 > 0) {
     Serial.println("Failed to shrink memory, but removal proceeded.");
     dbSize--;
+    MemberRemoved();
     Serial.println("Member removed.");
     return true;
   }
   DataBase = temp;
   dbSize--;
+  MemberRemoved();
+  Serial.println("Member removed.");
   return true;
 }
 
 int manageDataBase() {
   while (true) {
-//    if(digitalRead(BLACK_BUTTON) == LOW){
-//      return 0;
-//    }
-//    if (digitalRead(YELLOW_BUTTON) == LOW){
-//      InsertMember();
-//      return 1;
-//    }
-//    if (digitalRead(BLUE_BUTTON) == LOW) {
-//      RemoveMember();
-//      return 2;
-//    } 
-
-    Serial.print(digitalRead(BLACK_BUTTON));
-    Serial.print(" black. ");
-    Serial.print(digitalRead(YELLOW_BUTTON));
-    Serial.print(" yellow. ");
-    Serial.print(digitalRead(BLUE_BUTTON));
-    Serial.println(" blue.");
-    delay(1000);
+    bool black = digitalRead(BLACK_BUTTON);
+    bool yellow = digitalRead(YELLOW_BUTTON);
+    bool blue = digitalRead(BLUE_BUTTON);
+    
+    if(black == HIGH && yellow == LOW && blue == LOW){
+      Serial.println("Black ");
+      return 0;
+    }
+    if (black == LOW && yellow == HIGH && blue == LOW){
+      Serial.println("Yellow ");
+      InsertMember();
+      return 1;
+    }
+    if (black == LOW && yellow == LOW && blue == HIGH) {
+      Serial.println("Blue ");
+      RemoveMember();
+      return 2;
+    } 
+    delay(100);
   }
-  Serial.println("no wait.");
   return 3;
 }

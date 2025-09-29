@@ -28,9 +28,9 @@ void setup() {
   pinMode(PIN_RED,   OUTPUT);
   pinMode(PIN_GREEN, OUTPUT);
   pinMode(PIN_BLUE,  OUTPUT);
-  pinMode(BLACK_BUTTON,  INPUT_PULLUP);
-  pinMode(YELLOW_BUTTON, INPUT_PULLUP);
-  pinMode(BLUE_BUTTON,   INPUT_PULLUP);
+  pinMode(BLACK_BUTTON,  INPUT);
+  pinMode(YELLOW_BUTTON, INPUT);
+  pinMode(BLUE_BUTTON,   INPUT);
   
   display.clearDisplay();
   display.setTextSize(2);
@@ -93,9 +93,8 @@ void loop() {
     AccessDenied();
     Serial.println("ID NOT FOUND.");
   } else if (DataBase[indx].masterCard == true) {
-    Serial.println("click a botton.");
+    WelcomeAdmin();
     manageDataBase();
-    Serial.println("WELCOME ADMIN.");
   } else {
     AccessAllowed();
     Serial.println("ACCESS ALLOWED.");
