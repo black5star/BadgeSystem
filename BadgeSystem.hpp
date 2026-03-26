@@ -31,11 +31,11 @@
 #define SCREEN_WIDTH   128
 #define OLED_RESET      -1
 
-//#define BLACK  0x000000
-//#define WHITE  0xFFFFFF
-//#define GREEN  0x40FF00
-//#define RED    0xFF0000
-//#define ORANGE 0xF57538
+#define BLACK  0x000000
+#define WHITE  0xFFFFFF
+#define GREEN  0x40FF00
+#define RED    0xFF0000
+#define ORANGE 0xF57538
 
 extern Adafruit_SSD1306 display;
 

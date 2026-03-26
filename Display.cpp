@@ -8,7 +8,7 @@ void  AccessAllowed() {
   display.setCursor(28, 17);
   display.println("ACCESS");
   display.setCursor(23, 40);
-  display.println("ALLOWED");
+  display.println("GRANTED");
   display.display();
 
   analogWrite(PIN_RED,   0);

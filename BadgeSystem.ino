@@ -4,8 +4,8 @@
 MFRC522 rfid(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key; 
 
-//const char* ssid = "MAKERS_IOT";
-//const char* password = "1337@IOT";
+//const char* ssid = "SSID"; // Change this to your WiFi SSID
+//const char* password = "PASSWORD"; // Change this to your WiFi password
 
 CardInfo *DataBase;
 int dbSize;
@@ -39,15 +39,15 @@ void setup() {
   display.println("Connected");
   display.display();
   
-//  WiFi.begin(ssid, password);
-//  Serial.println("\nConnecting to WiFi...");
-//  while (WiFi.status() != WL_CONNECTED) {
-//    Serial.print(".");
-//    delay(200);
-//  }
-//  Serial.println("\nConnected!");
-//  Serial.print("ESP32 IP: ");
-//  Serial.println(WiFi.localIP());
+ WiFi.begin(ssid, password);
+ Serial.println("\nConnecting to WiFi...");
+ while (WiFi.status() != WL_CONNECTED) {
+   Serial.print(".");
+   delay(200);
+ }
+ Serial.println("\nConnected!");
+ Serial.print("ESP32 IP: ");
+ Serial.println(WiFi.localIP());
 
   SPI.begin(SCK, MISO, MOSI, SS_PIN);
 
@@ -97,7 +97,7 @@ void loop() {
     manageDataBase();
   } else {
     AccessAllowed();
-    Serial.println("ACCESS ALLOWED.");
+    Serial.println("ACCESS GRANTED.");
   }
   
 //  Serial.print("Card UID: ");
